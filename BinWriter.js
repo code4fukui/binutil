@@ -48,18 +48,25 @@ export class BinWriter extends BinReader {
       this.p += 2;
     }
   }
-  writeBytes(buf) {
+  writeBytes(buf, len) {
     const p = this.p;
     let b = this.bin;
-    while (p + buf.length > b.length) b = this._extends();
-    for (let i = 0; i < buf.length; i++) {
+    if (len === undefined) {
+      len = buf.length;
+    }
+    while (p + len > b.length) b = this._extends();
+    const len2 = Math.min(len, buf.length);
+    for (let i = 0; i < len2; i++) {
       b[p + i] = buf[i];
     }
-    this.p += buf.length;
+    for (let i = len2; i < len; i++) {
+      b[p + i] = 0;
+    }
+    this.p += len;
   }
-  writeString(s) {
+  writeString(s, len) {
     const bin = new TextEncoder().encode(s);
-    this.writeBytes(bin);
+    this.writeBytes(bin, len);
   }
   writeFloat32(f) {
     if (!this.le) throw new Error("big endian not spported");

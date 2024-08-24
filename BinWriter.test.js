@@ -31,6 +31,33 @@ Deno.test("writeUint16 bigendian", () => {
   w.writeUint16(0x0102);
   t.assertEquals(w.toBytes(), new Uint8Array([1, 2]));
 });
+Deno.test("writeBytes with len", () => {
+  const w = new BinWriter();
+  const bin = new Uint8Array([1, 2]);
+  w.writeBytes(bin, 5);
+  t.assertEquals(w.toBytes(), new Uint8Array([1, 2, 0, 0, 0]));
+});
+Deno.test("writeBytes with len 2", () => {
+  const w = new BinWriter();
+  const bin = new Uint8Array([1, 2]);
+  w.writeBytes(bin, 1);
+  t.assertEquals(w.toBytes(), new Uint8Array([1]));
+});
+Deno.test("writeString with len", () => {
+  const w = new BinWriter();
+  w.writeString("abc", 5);
+  t.assertEquals(w.toBytes(), new Uint8Array([97, 98, 99, 0, 0]));
+});
+Deno.test("writeString with len2", () => {
+  const w = new BinWriter();
+  w.writeString("abc", 2);
+  t.assertEquals(w.toBytes(), new Uint8Array([97, 98]));
+});
+Deno.test("writeString without len", () => {
+  const w = new BinWriter();
+  w.writeString("abc");
+  t.assertEquals(w.toBytes(), new Uint8Array([97, 98, 99]));
+});
 /*
 
 Deno.test("EOF", () => {
