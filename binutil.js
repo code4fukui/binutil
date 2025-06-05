@@ -61,14 +61,14 @@ export const s2bin = (bin, off, s) => {
   setbin(bin, off, new TextEncoder().encode(s));
 };
 export const bincat = (...bins) => {
-	const len = bins.reduce((pre, cur) => pre + cur.length, 0);
+  const len = bins.reduce((pre, cur) => pre + cur.length, 0);
   const bin = new Uint8Array(len);
-	let idx = 0;
-	bins.forEach(b => {
-		for (let i = 0; i < b.length; i++) {
-			bin[idx++] = b[i];
-		}
-	});
+  let idx = 0;
+  bins.forEach(b => {
+    for (let i = 0; i < b.length; i++) {
+      bin[idx++] = b[i];
+    }
+  });
   return bin;
 };
 export const eqbin = (bin1, bin2) => {
