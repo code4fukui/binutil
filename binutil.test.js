@@ -1,5 +1,5 @@
 import * as t from "https://deno.land/std/testing/asserts.ts";
-import { bin2short, short2bin, i2bin, bin2i } from "./binutil.js";
+import { bin2short, short2bin, i2bin, bin2i, bincat, eqbin, setbin, subbin } from "./binutil.js";
 
 Deno.test("short bigendian", () => {
   const b = new Uint8Array(10);
@@ -25,4 +25,29 @@ Deno.test("int", () => {
   t.assertEquals(bin2i(b, 6, true), 123456);
   t.assert(b[2] != b[6]);
   t.assert(b[2 + 3] == b[6]);
+});
+Deno.test("bincat", () => {
+  const a = new Uint8Array([1, 2, 3]);
+  const b = new Uint8Array([4, 5]);
+  const ab = bincat(a, b);
+  t.assertEquals(ab, new Uint8Array([1, 2, 3, 4, 5]));
+});
+Deno.test("eqbin", () => {
+  const a = new Uint8Array([1, 2, 3]);
+  const b = new Uint8Array([4, 5]);
+  t.assert(!eqbin(a, b));
+  t.assert(eqbin(a, a));
+  t.assert(eqbin(b, b));
+  t.assert(!eqbin(a, null));
+});
+Deno.test("setbin", () => {
+  const a = new Uint8Array([1, 2, 3]);
+  const b = new Uint8Array([4, 5]);
+  t.assertEquals(setbin(a, 1, b), new Uint8Array([1, 4, 5]));
+});
+Deno.test("subbin", () => {
+  const a = new Uint8Array([1, 2, 3, 4]);
+  t.assertEquals(subbin(a, 1), new Uint8Array([2, 3, 4]));
+  t.assertEquals(subbin(a, 1, 2), new Uint8Array([2, 3]));
+  t.assertEquals(subbin(a, 2, 2), new Uint8Array([3, 4]));
 });

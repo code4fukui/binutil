@@ -19,20 +19,14 @@ export const bin2short = (bin, n, littleendian) => { // bigendian
     return ((bin[n] & 0xff) << 8) | (bin[n + 1] & 0xff);
   }
 };
-export const subbin = (bin, n, len) => {
+export const subbin = (bin, n, len) => { // use Uint8Array#subarray
   if (len === undefined) {
     len = bin.length - n;
   }
-  const b = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    b[i] = bin[i + n];
-  }
-  return b;
+  return bin.subarray(n, n + len);
 };
-export const setbin = (bin, off, b) => {
-  for (let i = 0; i < b.length; i++) {
-    bin[i + off] = b[i];
-  }
+export const setbin = (bin, off, b) => { // use Uint8Array#set
+  bin.set(b, off);
   return bin;
 };
 export const i2bin = (b, off, n, littleendian) => { // big endian
@@ -65,9 +59,8 @@ export const bincat = (...bins) => {
   const bin = new Uint8Array(len);
   let idx = 0;
   bins.forEach(b => {
-    for (let i = 0; i < b.length; i++) {
-      bin[idx++] = b[i];
-    }
+    bin.set(b, idx);
+    idx += b.length;
   });
   return bin;
 };
