@@ -1,5 +1,5 @@
 import * as t from "https://deno.land/std/testing/asserts.ts";
-import { bin2short, short2bin, i2bin, bin2i, bincat, eqbin, setbin, subbin } from "./binutil.js";
+import { bin2short, short2bin, i2bin, bin2i, bincat, eqbin, setbin, subbin, findbin } from "./binutil.js";
 
 Deno.test("short bigendian", () => {
   const b = new Uint8Array(10);
@@ -50,4 +50,9 @@ Deno.test("subbin", () => {
   t.assertEquals(subbin(a, 1), new Uint8Array([2, 3, 4]));
   t.assertEquals(subbin(a, 1, 2), new Uint8Array([2, 3]));
   t.assertEquals(subbin(a, 2, 2), new Uint8Array([3, 4]));
+});
+Deno.test("findbin", () => {
+  const a = new Uint8Array([1, 2, 3, 4]);
+  t.assertEquals(findbin(a, new Uint8Array([2, 3])), 1);
+  t.assertEquals(findbin(a, new Uint8Array([4, 5])), -1);
 });

@@ -81,3 +81,13 @@ export const eqbin = (bin1, bin2) => {
   }
   return true;
 };
+export const findbin = (bin, chk, offset = 0) => {
+  if (typeof chk == "string") chk = new TextEncoder().encode(chk);
+  A: for (let i = offset; i <= bin.length; i++) {
+    for (let j = 0; j < chk.length; j++) {
+      if (bin[i + j] != chk[j]) continue A;
+    }
+    return i;
+  }
+  return -1;
+};
